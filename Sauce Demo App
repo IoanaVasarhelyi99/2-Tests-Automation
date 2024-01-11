@@ -1,0 +1,111 @@
+void addSingleProductToCart() {
+        //1.Open browser (Firefox)
+        WebDriverManager.firefoxdriver().clearDriverCache().setup();
+        WebDriver browser;
+        browser = new FirefoxDriver();
+
+        //2.Access app URL
+        browser.get("https://www.saucedemo.com/v1/");
+
+        //3.Insert user
+        By usernameInput = By.id("user-name"); // //input[@id='user-name']
+        browser.findElement(usernameInput).sendKeys("standard_user");
+
+        //4.Insert password
+        By passwordInput = By.id("password");
+        browser.findElement(passwordInput).sendKeys("secret_sauce");
+
+        //5.Click Login button
+        By loginButton = By.id("login-button");
+        browser.findElement(loginButton).click();
+
+        //Expected: Inventory container is displayed on products page
+        By inventoryContainer = By.id("inventory_container");
+        assertTrue(browser.findElement(inventoryContainer).isDisplayed());
+
+        //1. add desired product to cart
+        List<WebElement> productsTitles = browser.findElements(By.xpath("//div[@class='inventory_item_name']"));
+        List<WebElement> addButtons = browser.findElements(By.xpath("//button[@class='btn_primary btn_inventory']"));
+        String productToBeAdded = "Sauce Labs Backpack";
+        boolean isFound = false;
+
+        for (int index = 0; index < productsTitles.size(); index++) {
+            if (productsTitles.get(index).getText().equals(productToBeAdded)) {
+                isFound = true;
+                addButtons.get(index).click();
+                break;
+            }
+        }
+        if (!isFound) {
+            //   System.out.println("Unable to find product with title: " + productToBeAdded);
+            throw new RuntimeException("Unable to find product with title: " + productToBeAdded);
+        }
+
+        // => check product counter value
+        By productCounter = By.xpath("//span[@class='fa-layers-counter shopping_cart_badge']");
+        String counterText = browser.findElement(productCounter).getText();
+        assertEquals("1", counterText);
+
+        // 2. navigate to cart details
+        By cartIcon = By.id("shopping_cart_container");
+        browser.findElement(cartIcon).click();
+
+        // => check remove button is present
+        By removeButton = By.xpath("//button[@class='btn_secondary cart_button']");
+        String buttonValue = browser.findElement(removeButton).getText();
+        assertEquals("REMOVE",buttonValue);
+
+        // Check page url is https://www.saucedemo.com/v1/cart.html
+        String expectedURL = "https://www.saucedemo.com/v1/cart.html";
+        browser.getCurrentUrl();
+        String actualURL = browser.getCurrentUrl();
+        System.out.println(actualURL);
+        assertEquals(expectedURL,actualURL );
+
+        // => check product title
+        By pageNameTitle = By.xpath("//div [@class= 'subheader']");
+        String actualPageTitle = browser.findElement(pageNameTitle).getText();
+        assertEquals("Your Cart", actualPageTitle);
+
+        // => check product price
+        By productPrice = By.xpath("//div[@class='inventory_item_price']");
+        String actualPrice = browser.findElement(productPrice).getText();
+        assertEquals("29.99", actualPrice);
+
+        // => check product quantity
+        By productQuantity = By.xpath("//div[@class='cart_quantity']");
+        String actualQuantity = browser.findElement(productQuantity).getText();
+        assertEquals("1", actualQuantity);
+
+        // => click checkout button
+        By checkoutButton = By.xpath("//a[@class='btn_action checkout_button']");
+        browser.findElement(checkoutButton).click();
+
+        // fill the checkout fields
+        By firstName = By.id("first-name");
+        browser.findElement(firstName).sendKeys("Ioana");
+
+        By lastName = By.id("last-name");
+        browser.findElement(lastName).sendKeys("Vasarhelyi");
+
+        By zipCode = By.id("postal-code");
+        browser.findElement(zipCode).sendKeys("405300");
+
+        // clcik continue button
+        By continueButton = By.xpath("//input[@class='btn_primary cart_button']");
+        browser.findElement(continueButton).click();
+
+        // click finish button
+        By finishButton = By.xpath("//a[@class='btn_action cart_button']");
+        browser.findElement(finishButton).click();
+
+        // check the success message
+        By successMessage = By.xpath("//h2[@class='complete-header']");
+        String actualMessage = browser.findElement(successMessage).getText();
+        System.out.println(actualMessage);
+
+        // Browser exit
+        browser.quit();
+
+    }
+}
