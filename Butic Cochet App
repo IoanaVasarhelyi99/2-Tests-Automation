@@ -1,0 +1,77 @@
+ void loginAndAddSinglePoduct() {
+        //1.Open browser
+        WebDriverManager.firefoxdriver().clearDriverCache().setup();
+        WebDriver browser;
+        browser = new FirefoxDriver();
+
+        //2.Access app URL
+        browser.get("https://www.buticcochet.ro");
+
+        //3.Click Login button
+        By loginButton = By.xpath("//div[@class='quick-access']");
+        browser.findElement(loginButton).click();
+
+        //4.Insert adresa de email
+        By adresaEmail = By.id("email");
+        browser.findElement(adresaEmail).sendKeys("croco@yahoo.com");
+
+        //5.Insert password
+        By password = By.id("pass");
+        browser.findElement(password).sendKeys("crocodil");
+
+        //6.Click autentificare
+        By autentificare = By.id("send2");
+        browser.findElement(autentificare).click();
+
+        //7.Click homepage
+        By homePage = By.id("nav");
+        browser.findElement(homePage).click();
+
+        //8.Add product to cart
+        List<WebElement> productsTitles = browser.findElements(By.xpath("//h3[@class='product-name']"));
+        List<WebElement> addButtons = browser.findElements(By.xpath("//button[@class='button btn-cart']"));
+        String productToBeAdded = "Set cadou cercei si inel floare albastra cu perla alba crosetati manual Buticcochet, SET01";
+
+        //9. navigate to shopping cart
+        By shoppingCart = By.id("ajaxscicon");
+        browser.findElement(shoppingCart).click();
+
+        //10. go to checkout
+        By checkout = By.xpath("//button[@class='button ajcheckout']");
+        browser.findElement(checkout).click();
+
+        //11. fill the checkout fields
+        By adress = By.id("billing:street1");
+        browser.findElement(adress).sendKeys("Magurele,nr 53");
+
+        By city = By.id("billing:city");
+        browser.findElement(city).sendKeys("Alba Iulia");
+
+        By phoneNumber = By.id("billing:telephone");
+        browser.findElement(phoneNumber).sendKeys("0759098765");
+
+        By county = By.id("billing:region_id");
+        browser.findElement(county).sendKeys("Alba");
+
+        //12. Finish the order
+        By continua = By.xpath("//button[@onclick='billing.save()']");
+        browser.findElement(continua).click();
+
+        By post = By.xpath("//input[@id='s_method_flatrate2_flatrate2']");
+        new WebDriverWait(browser, Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(post)).click();
+
+        By pressButton = By.xpath("//button[@onclick='shippingMethod.save()']");
+        browser.findElement(pressButton).click();
+
+        By cash = By.xpath("//input[@id='p_method_cashondelivery']");
+        new WebDriverWait(browser, Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(cash)).click();
+
+        By pressContinua = By.xpath("//button[@onclick='payment.save()']");
+        browser.findElement(pressContinua).click();
+
+        By termeni = By.xpath("//input[@id='agreement-1']");
+        new WebDriverWait(browser, Duration.ofSeconds(30)).until(ExpectedConditions.elementToBeClickable(termeni)).click();
+
+        // Browser exit
+        browser.quit();
+    }
