@@ -1,2 +1,2 @@
-Check the 2 tests automation files: Butic Cochet and Sauce Demo
+Check the 2 tests automation files: Butic Cochet and Sauce Demo.
 I wrote 2 automation tests for 2 e-commerce web applications. The tests are based on: opening the Mozilla Browser, accessing the URL of the app, logging in with a specific e-mail and password, adding a product to the cart, navigating to the shopping cart, going to checkout, filling the heckout fields with personal information, finish the order and exit the browser.
